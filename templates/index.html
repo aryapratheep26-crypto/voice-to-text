@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceFlow - Text to Speech</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app-layout">
+    <div class="app-card">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="22"></line>
+                    </svg>
+                </div>
+                <div>
+                    <div class="title-row">
+                        <h1>VoiceFlow</h1>
+                        <span class="pro-badge">PRO TTS</span>
+                    </div>
+                    <p class="subtitle">Convert text into natural speech across 20+ languages</p>
+                </div>
+            </div>
+        </header>
+
+        <form id="ttsForm" action="/speak" method="POST">
+
+            <!-- Language Section -->
+            <div class="control-group">
+                <div class="section-header">
+                    <span class="section-label">Language</span>
+                </div>
+                
+                <div class="lang-pills">
+                    <button type="button" class="lang-chip active" data-lang="en">English</button>
+                    <button type="button" class="lang-chip" data-lang="es">Spanish</button>
+                    <button type="button" class="lang-chip" data-lang="fr">French</button>
+                    <button type="button" class="lang-chip" data-lang="de">German</button>
+                    <button type="button" class="lang-chip" data-lang="hi">Hindi</button>
+                    <button type="button" class="lang-chip" data-lang="ja">Japanese</button>
+                    <button type="button" class="lang-chip" data-lang="zh-CN">Chinese</button>
+                </div>
+
+                <div class="select-wrapper">
+                    <select id="langSelect" class="custom-select">
+                        <option value="en" selected>English (US)</option>
+                        <option value="es">Spanish (Español)</option>
+                        <option value="fr">French (Français)</option>
+                        <option value="de">German (Deutsch)</option>
+                        <option value="it">Italian (Italiano)</option>
+                        <option value="pt">Portuguese (Português)</option>
+                        <option value="hi">Hindi (हिन्दी)</option>
+                        <option value="ta">Tamil (தமிழ்)</option>
+                        <option value="te">Telugu (తెలుగు)</option>
+                        <option value="bn">Bengali (বাংলা)</option>
+                        <option value="ja">Japanese (日本語)</option>
+                        <option value="ko">Korean (한국어)</option>
+                        <option value="zh-CN">Chinese (中文)</option>
+                        <option value="ru">Russian (Русский)</option>
+                        <option value="ar">Arabic (العربية)</option>
+                        <option value="nl">Dutch (Nederlands)</option>
+                        <option value="tr">Turkish (Türkçe)</option>
+                        <option value="pl">Polish (Polski)</option>
+                        <option value="sv">Swedish (Svenska)</option>
+                        <option value="id">Indonesian (Bahasa Indonesia)</option>
+                        <option value="th">Thai (ไทย)</option>
+                        <option value="vi">Vietnamese (Tiếng Việt)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quick Samples -->
+            <div class="sample-bar">
+                <span class="sample-title">Try Sample:</span>
+                <button type="button" class="sample-btn" data-text="Welcome to VoiceFlow. Enjoy smooth, natural text to speech synthesis.">Greeting</button>
+                <button type="button" class="sample-btn" data-text="Technology is best when it brings people together and makes life simpler.">Inspiration</button>
+                <button type="button" class="sample-btn" data-text="Hola, bienvenido a la conversión de texto a voz en español.">Spanish</button>
+                <button type="button" class="sample-btn" data-text="Bonjour! Nous sommes ravis de vous accueillir aujourd'hui.">French</button>
+            </div>
+
+            <!-- Text Area Container -->
+            <div class="textarea-card">
+                <textarea
+                    id="text"
+                    name="text"
+                    placeholder="Type or paste your text here..."
+                    required></textarea>
+
+                <div class="textarea-actions">
+                    <div class="stats-group">
+                        <span id="charCount" class="stat-pill">0 chars</span>
+                        <span id="wordCount" class="stat-pill">0 words</span>
+                        <span id="estDuration" class="stat-pill">~0s duration</span>
+                    </div>
+                    <div class="tools-group">
+                        <button type="button" id="copyBtn" class="tool-btn" title="Copy text">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy
+                        </button>
+                        <button type="button" id="clearBtn" class="tool-btn danger" title="Clear text">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Voice Profile Badge -->
+            <div class="voice-profile-card">
+                <div class="voice-avatar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="23"></line>
+                        <line x1="8" y1="23" x2="16" y2="23"></line>
+                    </svg>
+                </div>
+                <div class="voice-info">
+                    <span class="voice-name">Soft & Confident Male Voice</span>
+                    <span class="voice-desc">Calm, clear articulation with natural pitch depth</span>
+                </div>
+            </div>
+
+            <!-- Tuning Controls -->
+            <div class="settings-grid">
+                <div class="setting-box">
+                    <div class="setting-header">
+                        <label for="rateRange">Speaking Speed</label>
+                        <span id="rateVal" class="setting-value">0.95x</span>
+                    </div>
+                    <input type="range" id="rateRange" min="0.5" max="2.0" step="0.05" value="0.95" class="custom-slider">
+                    <div class="speed-presets">
+                        <button type="button" class="preset-btn" data-speed="0.8">0.8x</button>
+                        <button type="button" class="preset-btn active" data-speed="0.95">Normal</button>
+                        <button type="button" class="preset-btn" data-speed="1.2">1.2x</button>
+                        <button type="button" class="preset-btn" data-speed="1.5">1.5x</button>
+                    </div>
+                </div>
+
+                <div class="setting-box">
+                    <div class="setting-header">
+                        <label for="pitchRange">Voice Pitch Tone</label>
+                        <span id="pitchVal" class="setting-value">0.85</span>
+                    </div>
+                    <input type="range" id="pitchRange" min="0.5" max="1.5" step="0.05" value="0.85" class="custom-slider">
+                    <div class="pitch-labels">
+                        <span>Deeper</span>
+                        <span>Warm</span>
+                        <span>Higher</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualizer & Status Box -->
+            <div class="status-card" id="statusBox">
+                <div class="sound-wave" id="soundWave">
+                    <span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span>
+                </div>
+                <span id="statusText" class="status-text">Ready to speak</span>
+            </div>
+
+            <!-- Action Row -->
+            <div class="action-row">
+                <button type="submit" id="speakBtn" class="btn primary-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                    </svg>
+                    <span>Speak Now</span>
+                </button>
+
+                <button type="button" id="stopBtn" class="btn stop-btn" style="display: none;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+                    </svg>
+                    <span>Stop</span>
+                </button>
+            </div>
+
+        </form>
+
+        <!-- Audio Output & Download Card -->
+        <div id="audioContainer" class="audio-container"></div>
+
+        <!-- History Card -->
+        <div id="historySection" class="history-section" style="display: none;">
+            <div class="history-title">Recent Audio Clips</div>
+            <div id="historyList" class="history-list"></div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
